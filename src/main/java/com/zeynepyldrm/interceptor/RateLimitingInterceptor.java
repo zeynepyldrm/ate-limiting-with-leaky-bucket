@@ -1,24 +1,35 @@
 package com.zeynepyldrm.interceptor;
 
 import com.zeynepyldrm.annotation.RateLimiting;
+import com.zeynepyldrm.service.LeakyBucketService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.lang.reflect.Method;
+
+@Component
 public class RateLimitingInterceptor implements HandlerInterceptor {
 
-    private HandlerMethod method;
+    @Autowired
+    LeakyBucketService leakyBucketService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        method = (HandlerMethod) handler;
-        RateLimiting rateLimiting = method.getMethodAnnotation(RateLimiting.class);
-        if (rateLimiting != null) {
-            if (request.getRequestURI().endsWith("/user")) {
-
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod maControl = (HandlerMethod) handler;
+            Method pmrResolver = (Method) maControl.getMethod();
+            String methodName = pmrResolver.getName();
+            // ...
+            RateLimiting rateLimiting = maControl.getMethodAnnotation(RateLimiting.class);
+            if (rateLimiting != null) {
+                leakyBucketService.addRequestBucket();
             }
         }
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 }
