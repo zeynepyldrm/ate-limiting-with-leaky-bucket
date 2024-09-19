@@ -1,5 +1,6 @@
 package com.zeynepyldrm.service;
 
+import lombok.Getter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -8,8 +9,10 @@ import java.util.Date;
 @Component
 public class LeakyBucketService {
 
+    @Getter
     private final int capacity = 20; // Kovanın kapasitesi
     private final int leakRate = 5; // Sızma hızı (birim zamanda boşaltılacak su miktarı)
+    @Getter
     private int currentWater; // Şu anki su miktarı
     private long lastLeakTime; // Son sızdırma zamanı
 
