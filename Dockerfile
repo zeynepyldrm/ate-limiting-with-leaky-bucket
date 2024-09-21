@@ -1,4 +1,5 @@
 FROM openjdk:17-jdk-slim AS build
+EXPOSE 8080
 
 COPY pom.xml mvnw ./
 COPY .mvn .mvn

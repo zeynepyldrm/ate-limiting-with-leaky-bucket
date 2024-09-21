@@ -15,7 +15,8 @@ public class LeakyBucketServiceTest {
 
     @Test
     void givenBucketNotFull_whenAddRequestBucket_thenAddedRequestBucket() {
-        leakyBucketService.addRequestBucket();
+        boolean result = leakyBucketService.addRequestBucket();
+        Assertions.assertTrue(result);
         Assertions.assertEquals(1, leakyBucketService.getCurrentWater());
     }
 
@@ -25,13 +26,13 @@ public class LeakyBucketServiceTest {
             leakyBucketService.addRequestBucket();
         }
         Assertions.assertEquals(20, leakyBucketService.getCurrentWater());
-        leakyBucketService.addRequestBucket();
+        boolean result = leakyBucketService.addRequestBucket();
+        Assertions.assertFalse(result);
         Assertions.assertEquals(20, leakyBucketService.getCurrentWater());
     }
 
     @Test
     public void testThreadSafetyWithSynchronizedMethod() throws InterruptedException {
-        // Multi thread ile addRequestBucket metodunu çağır
         Runnable requestTask = () -> leakyBucketService.addRequestBucket();
         Thread thread1 = new Thread(requestTask);
         Thread thread2 = new Thread(requestTask);
@@ -43,6 +44,23 @@ public class LeakyBucketServiceTest {
         thread2.join();
 
         Assertions.assertTrue(leakyBucketService.getCurrentWater() <= leakyBucketService.getCapacity());
+    }
+
+    @Test
+    void givenBucketNotFull_whenLeakRequestFromBucket_thenShouldDecreaseByLeakRate(){
+        for (int i = 0; i < 10; i++) {
+            leakyBucketService.addRequestBucket();
+        }
+        leakyBucketService.leakRequestFromBucket();
+        Assertions.assertEquals(5, leakyBucketService.getCurrentWater());
+    }
+    @Test
+    void givenLessLeakRateInBucket_whenLeakRequestFromBucket_thenShouldBucketIsEmpty(){
+        for (int i = 0; i < 4; i++) {
+            leakyBucketService.addRequestBucket();
+        }
+        leakyBucketService.leakRequestFromBucket();
+        Assertions.assertEquals(0, leakyBucketService.getCurrentWater());
     }
 
 }

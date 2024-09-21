@@ -1,10 +1,8 @@
 ## rate-limiting-with-leaky-bucket
-
+Rate limiting implementation for leaky bucket algorithm
 ## Using for Docker
 
 ```sh
- git clone
- colima start
  docker build -t rate-limiting-with-leaky-bucket .
- docker run <image-id>
+ docker run -p 8080:8080 rate-limiting-with-leaky-bucket
 ```
