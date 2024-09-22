@@ -9,12 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @RateLimiting
     @PostMapping
-    public String handleRequest(@RequestParam(defaultValue = "1") int amount) {
-        boolean allowed = true;
-        if (allowed) {
-            return "Request accepted.";
-        } else {
-            return "Request rejected - too many requests.";
-        }
+    public String handleRequest() {
+        return "Request accepted.";
     }
 }

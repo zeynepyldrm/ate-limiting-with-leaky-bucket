@@ -10,7 +10,7 @@ import java.util.Date;
 public class LeakyBucketService {
 
     @Getter
-    private final int capacity = 20; // Kovanın kapasitesi
+    private final int capacity = 5; // Kovanın kapasitesi
     @Getter
     private int currentWater;
 
@@ -19,7 +19,7 @@ public class LeakyBucketService {
 
     @Scheduled(fixedRate = 10000)
     public void leakRequestFromBucket() {
-        int leakRate = 5;
+        int leakRate = 2;
         if (currentWater > 0 && currentWater < leakRate) {
             currentWater = 0;
         }
